@@ -1,0 +1,47 @@
+# Sample hifs configuration file:
+
+# Sort is the sort mode. Possible values:
+# - cpu: Sort the processes on their usage of CPU time.
+# - rss: Sort the processes on their resident set size.
+# - vsize: Sort the processes on their vsize.
+sort cpu
+
+# Info is the info mode. Possible values:
+# - pid: Show processes with their process id.
+# - username: Show processes with the username that runs them.
+# - wchan: Show the processes with their wchan.
+# - priority: Show the processes with their priority (nice value).
+# - cmdline: Show the processes with their literal command line.
+info username
+
+# Memory is the memory mode. Available are:
+# - free: Show amount of free memory.
+# - used: Show amount of used memory.
+memory used
+
+# Mapfile is the file containing the kernel symbol table. This file is
+# used for wchan lookups. Mind the quotes as mapfile does not begin
+# with an _ or a-z!
+mapfile "/usr/src/linux/System.map"
+
+# Groups: Here we define the people whose status we want to see 
+# (logged in/just logged in/not logged in). The one char ID is used
+# to identify that person on the screen.
+group "SysAdmins" {
+	geertj, G
+	aj, A
+	sven, S
+	marcolz, M
+}
+group "Friends" {
+	geertj, G
+	jeffry, J
+	pim, P
+}
+
+# Delay is the number of seconds between two data updates.
+delay 4.5
+
+# Diskfree is the minimum amount of free disk (in bytes) below which hifs
+# notifies the user that the filesystem is getting full
+diskfree 1000000

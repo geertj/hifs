@@ -1,0 +1,55 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(hifs.c)
+AC_CONFIG_HEADER(config.h)
+
+dnl Standard programs.
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LEX
+AC_PROG_YACC
+AC_PROG_LN_S
+
+dnl Glibc-2 has a seperate libcrypt, libc-5 hasn't.
+AC_CHECK_LIB(crypt,crypt,[EXTRA_LIBS="$EXTRA_LIBS -lcrypt"])
+AC_SUBST(EXTRA_LIBS)
+
+dnl Ncurses sometimes resides in weird places on Linux systems.
+AC_CHECK_LIB(ncurses,initscr,[HAVE_NCURSES="yes"])
+if test "$HAVE_NCURSES" != "yes"; then
+AC_MSG_ERROR([ncurses library not found!])
+fi
+AC_CHECK_HEADERS(ncurses.h ncurses/ncurses.h curses.h,break)
+
+dnl Test for the math library. Everybody has it, but heck..
+AC_CHECK_LIB(m,sqrt,[HAVE_MATH="yes"])
+if test "$HAVE_MATH" != "yes"; then
+AC_MSG_ERROR([math library not found!])
+fi
+
+dnl Test if we are building setuid-hifs
+AC_ARG_ENABLE(su-to-root,[  --enable-su-to-root     Build with su-to-root option],
+	AC_DEFINE(CONFIG_SU)
+	SETUID=yes
+	echo "** Building with su-to-root option")
+AC_SUBST(SETUID)
+
+AC_CHECK_LIB(c,getspnam,[SHADOW="libc"])
+if test "$SHADOW" == "libc"; then
+	AC_DEFINE(CONFIG_SHADOW)
+else
+	AC_CHECK_LIB(shadow,getspuid,[SHADOW="shadow"])
+	if test "$SHADOW" == "shadow"; then
+		AC_DEFINE(CONFIG_SHADOW)
+		EXTRA_LIBS="$EXTRA_LIBS -lshadow"
+	fi
+fi
+
+dnl Compile information is cooked into the binary.
+AC_DEFINE_UNQUOTED(COMPILE_BY,"`whoami`")
+AC_DEFINE_UNQUOTED(COMPILE_HOST,"`hostname`")
+AC_DEFINE_UNQUOTED(COMPILE_DATE,"`date`")
+AC_DEFINE_UNQUOTED(COMPILE_CC,"`cc -v 2>&1 | tail -1`")
+
+AC_OUTPUT(Makefile)

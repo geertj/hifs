@@ -1,0 +1,68 @@
+Changes for hifs.
+
+Changes from 1.3 to 1.4
+-Bug fixes! 1.3 reached a big audience and with their bug reports I was able 
+ to shake some stupid, some nifty bugs out.
+-Added delay and diskfree option to the configfile.
+-Added command line options.
+-Don't wait for the user if a warning was issued unless in debug mode.
+-Rewrote part of the manpage.
+-Removed global configuration file. Only .hifsrc remains.
+-Dynamically detect format of /proc/meminfo as the format keeps changing.
+-In setuid version: prevent coredumps.
+-Runtime shadow/normal password detection.
+-Verbose banner.
+-Better wchan support. Also try to read wchans from /boot/System.map and 
+ some other locations: same behaviour as ps(1).
+-Detection of possible too short delay between data updates.
+
+Changes from 1.2 to 1.3
+-Massive restructuring of the source. Things should be reasonably clean now.
+-Only check selected fs-types for diskspace.
+-New key bindings: I almost used up the entire alfabet, so I decided to do
+ things differently. The sort/info/mem modes are now a toggle, so they need
+ a total of only three keys. This way, hifs uses much less keys now.
+-Hifs is more verbose now to the user.
+-Changed utmp handling do go via libc and not via read(). This is cleaner.
+-Added priority info mode.
+-The configfile is now parsed via bison/flex. Extended syntax, like C-style
+ strings in the configfile.
+-Only one include file now: hifs.h. Everthing is included and defined here.
+-New get_string() function that has some command-line editing and isn't as
+ braindead as the ncurses mvinnstr() function.
+-The update period can be real now, instead of only integer.
+-Removed defaults.h.
+-Hifs compiles cleanly under glibc-2. Fixed include files: don't include
+ from asm/ and linux/ anymore.
+-Changed to using autoconf instead of home-brew ./configure script.
+-Added global configuration file. Search order is: $HOME/.hifsrc,
+ $LIBDIR/hifs/system.hifsrc
+-Added support for /proc/meminfo of kernel > 2.1.40.
+-Runtime kernel version detection instead of compile time. This gives on hifs
+ binary for all kernels.
+
+Changes from 1.1 to 1.2
+-Changed layout. First column is always process-name. Second is sorted on,
+ and the third column can be freely chosen. This seems more intuitive.
+-Added wchan info mode.
+-Fixed "/proc is full" bug, when proc device is called something other than
+ "none". (thanx: Masale).
+-Pause when a warning is issued during initialisation.
+
+Changes from first release to 1.1:
+-Added verion number ...
+-Added command-line info mode.
+-Added delay option.
+-Messaged are queued now, so only the most important messaged is shown.
+-Added configure script, that looks for kernel and libc version.
+-Removed System V IPC! 
+-Removed fork(). Hifs is only one process now!
+-Added (optional) setuid feature.
+-Added more functionality to the "configure" script.
+-Added renice feature.
+-Added 'K' option: kill with SIGKILL right away.
+-Added a configfile, for group, id, show and mem defaults (see manpage).
+-100% is now 100%, instead of 100.8 %.
+
+Version 1.0 didn't really have a version number, it was just "hifs". 
+But I thought it would be easy after all, to have version numbers.

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+host="`hostname | cut -f 1 -d .`"
+exec xterm -geometry 26x24 -T "Hifs $host" $@ -e hifs

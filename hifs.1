@@ -1,0 +1,165 @@
+.TH HIFS 1 "November 1997" "Linux" "Handy Information For SysAdmins v 1.4"
+
+.SH NAME
+hifs, xhifs \- Handy Information For Sysadmins
+
+.SH SYNOPSIS
+\fB hifs \fR[-vhd] [--version] [--help] [--debug]
+.sp 0
+\fB xhifs \fR[-vhd] [--version] [--help] [--debug]
+
+.SH DESCRIPTION
+\fBHifs \fR is a tool for watching the state your system. As it name implies, 
+it is especially usefull for system administrators, but it can be used by 
+normal users, too. The special use for system administrators is the amount of
+control you have within one window. You can see the most cpu intensive or
+memory wasting processes and you can DO something about them. Hifs lets you
+renice processes, write a message to a certain user or just kill the process.
+Hifs can be installed setuid-root with the option to su to root in hifs. One
+26x24 xterm should be enough to completely monitor a computer system. 
+
+.SH LIST OF FEATURES
+.TP
+.B Process listing
+Hifs shows the processes that use the most system resources. System 
+resources can be chosen by the user to be one of: percentage CPU, resident 
+set size or vsize.
+.TP
+.B Small size
+Hifs uses only a 26x24 text window, which is especially usefull under X, using 
+\fBxhifs\fR.
+.TP
+.B Correct misuse
+The user kan write messages to users, kill or renice processes, if he/she has 
+enough priviliges, of course.
+.TP
+.B Process information
+Hifs can show the following extra info on each process: command line, 
+username, pid, wchan and priority.
+.TP
+.B System statistics
+Hifs shows the following system statistics: Total CPU states, free/used 
+memory/swap, load averages, the number of real/total logins/xlogins.
+.TP
+.B Su-to-root option
+Hifs can be compiled as a setuid root program to let the user su to root and 
+drop these priviliges again from within hifs. This prevents you from having 
+a root window open all the time.
+.TP
+.B Filesystem information
+Hifs monitors mounted filesystems, and gives a sign when they are getting full.
+.TP
+.B User information
+A maximum of two groups of eight people can be defined. These people are 
+monitored for their presence on the system.
+
+.SH COMMAND LINE OPTIONS
+The following command line options are available.
+.TP
+.B -h, --help
+Show help about command-line arguments.
+.TP
+.B -v, --version
+Show version information.
+.TP
+.B -d, --debug
+Set debug mode. In debug mode, hifs waits for the user to press a key when \
+there was a warning.
+
+.SH INTERACTIVE COMMANDS
+Most commands in hifs are interactive. They are:
+.TP
+.B h, ? 
+Show online help.
+.TP
+.B s, <SPACE>
+Toggle the \fBsort\fR mode. The processes are sorted by this criterion. It 
+can be one of: sort by cpu usage, sort by resident set size or sort by vsize.
+.TP
+.B i
+Toggle the \fBinfo\fR mode. The info mode defines what hifs shows in the 
+third column of the screen. The following info mode are available: username, 
+process id, wchan, priority and command line.
+.TP
+.B m
+Toggle the \fBmemory\fR mode. Hifs can show you the amount of free mem/swap 
+or the amount of used mem/swap.
+.TP
+.B p
+Select a process and set it's priority (nice value). You need enough 
+priviliges to do this.
+.TP
+.B w
+Write a message to the standard output of a process. You need enough 
+priviliges to do this.
+.TP
+.B k
+Select a process and kill it. First send a SIGHUP, then a SIGTERM and if 
+the process is not gone by then, a SIGKILL is sent.
+.TP
+.B K
+Select a process and kill it with a SIGKILL right away.
+.TP
+.B u
+Set the period between two updates of the process data.
+.TP
+.B r
+If configured, su to root. Another invoke drops the root priviliges.
+.TP
+.B CTRL-L
+Redraw the screen.
+.TP
+.B q
+Quit hifs.
+
+.SH CONFIGFILE
+In the hifs configfile, a setup can be defined. The name for this file is
+\fB${HOME}/.hifsrc\fR. If this file is not found, reasonable default values 
+are used.  The following directives can be used in the configfile: Every 
+directive on one line. Lines beginning with a hash ('#') are ignored.
+
+.TP
+.B sort cpu|rss|vsize
+Specify the sort mode. 
+.TP
+.B info username|pid|cmdline|wchan|priority
+Specify the info mode.
+.TP
+.B memory free|used
+Specify the memory mode.
+.TP
+.B delay DELAY
+Specify the delay between updates in seconds. DELAY must be an int or a float.
+.TP
+.B diskfree SIZE
+Specify the minimum free space in bytes per filesystem. Hifs notifies the 
+user if the free space of a certain filesystem drops below this value. Only
+read-write mounted filesystems of the type ext2, nfs and umsdos are checked. 
+SIZE must be an int.
+.TP
+.B mapfile FILENAME
+Specify the kernel symbol table. This file is generated during the compilation
+of a kernel. By default, the following locations are searched in their 
+respective order: /boot/System.map-%v, /boot/System.map, 
+/lib/modules/%v/System.map and /usr/src/linux/System.map. %v Is the full
+kernel version number. FILENAME must be a string.
+.TP
+.B group NAME { USER,ID USER,ID ... }
+Define a group with name NAME. You can give up to eight USER, ID pairs. USER
+is the login name of the user, ID is a single character that represents the 
+user within hifs. There can be at most two groups. NAME and USER are strings.
+ID is a char.
+
+.SH NOTES
+Hifs gets it's info from the \fBproc\fR-filesystem. It should be compiled 
+into your kernel, and mounted on \fB/proc\fR. Without the /proc filesystem, 
+hifs is useless and will refuse to run. 
+.sp 0
+Hifs is covered under the GNU General Public License (GPL).
+
+.SH AUTHOR
+The \fBLinux\fR version of Hifs is created by Geert Jansen (geertj@stack.nl). 
+It is inspired by the original \fIFreeBSD\fR version, created by Sven Berkvens 
+(sven@stack.nl). The latest verion can be found via anonymous ftp at 
+skynet.stack.nl in /pub/linux/hifs.
+

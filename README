@@ -1,0 +1,41 @@
+  Hifs: Handy Information For Sysadmins 1.4, November 1997
+
+      To learn more about hifs: see the manpage, `hifs.1'. For the copying
+  policy, see the file COPYING (hifs is GPL software).
+
+  Compilation hints:
+
+	  In the file INSTALL there are generic install instructions. However,
+  the following instructions should build and install hifs in almost all 
+  circumstances. If you build the setuid version of hifs, you can su to root
+  from within hifs. You do this by giving --enable-su-to-root as an argument 
+  to configure.
+
+	  ~/hifs> mkdir compile; cd compile
+	  ~/hifs> ../configure --help
+	  ~/hifs> ../configure [--enable-su-to-root]
+	  ~/hifs> make; make install
+
+  Setuid version:
+
+	  If hifs is compiled with the su-to-root option,  hifs will be a setuid 
+  root program and therefore inherently insecure. I put a lot of effort in 
+  creating secure code, but I can't make any guarantees about security. Having 
+  said this, this is what hifs does to prevent abuse:
+
+   o Drop priviliges right away.
+   o Take care that buffer overruns don't occur.
+   o Verbose syslog() reporting.
+
+  Latest version:
+
+      The latest version of hifs is available via anonymous ftp at 
+  skynet.stack.nl in /pub/linux/hifs.
+
+  Author:
+
+	  Linux Hifs is created by Geert Jansen (geertj@stack.nl). It is inspired 
+  by the original FreeBSD version created by Sven Berkvens (sven@stack.nl).
+
+  See the man page for more info!
+

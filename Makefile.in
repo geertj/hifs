@@ -1,0 +1,70 @@
+# Makefile for hifs.
+# (C) 1996,1997 by Geert Jansen.
+
+# Path to the source
+VPATH = @srcdir@
+srcdir = @srcdir@
+
+# Common autoconf direcories
+exec_prefix = @exec_prefix@
+prefix = @prefix@
+bindir = @bindir@
+mandir = @mandir@
+libdir = @libdir@
+
+# Compiler and -options
+CC = @CC@
+CCOPT = @CFLAGS@
+LD = @CC@
+LDFLAGS = @LDFLAGS@
+BISON = @YACC@
+BISONFLAGS = -d
+LEX = @LEX@
+LEXFLAGS = -i
+LN = @LN_S@
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+LIBS = -lncurses -lm @EXTRA_LIBS@
+DEFINES = @DEFS@
+INCS = -I.
+CFLAGS = $(CCOPT) $(DEFINES) $(INCS)
+SETUID = @SETUID@
+
+OBJS = hifs.o screen.o proc.o util.o cfgfile.o cfglex.o
+
+.PHONY: clean all install check
+
+all: hifs
+
+hifs: $(OBJS)
+	$(LD) $(LDFLAGS) -o hifs $(OBJS) $(LIBS)
+
+clean:
+	rm -f $(OBJS)
+
+install: hifs
+ifneq ($(SETUID),yes)
+	if [ ! -d $(bindir) ]; then $(srcdir)/mkinstalldirs $(bindir); fi
+	$(INSTALL_PROGRAM) hifs $(bindir)/hifs
+else
+	$(INSTALL) -m 4711 -o 0 -g 0 hifs $(bindir)/hifs
+endif
+	$(INSTALL_PROGRAM) $(srcdir)/xhifs $(bindir)/xhifs
+	if [ ! -d $(mandir)/man1 ]; then $(srcdir)/mkinstalldirs $(mandir)/man1; fi
+	$(INSTALL_DATA) $(srcdir)/hifs.1 $(mandir)/man1
+	rm -f $(mandir)/man1/xhifs.1
+	$(LN) hifs.1 $(mandir)/man1/xhifs.1
+
+check:
+	@echo "No checks built in"
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+%.c: %.y
+	$(BISON) $(BISONFLAGS) -o $@ $<
+
+%.c: %.l
+	$(LEX) $(LEXFLAGS) -t $< > $@
+
